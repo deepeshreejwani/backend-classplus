@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 // Routes which should handle requests
 app.use("/user", userRoute);
 
+app.listen(3000);
 
-module.exports = app;
 
 
