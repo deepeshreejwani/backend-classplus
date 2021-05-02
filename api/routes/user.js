@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     cb(null, './uploads/');
   },
   filename: function(req, file, cb) {
-    cb(null, file.originalname + new Date().toISOString());
+    cb(null, new Date().toISOString() + file.originalname);
   }
 });
 
@@ -48,7 +48,7 @@ router.post("/", upload.single('userImage'), (req, res, next) => {
             name: result.name,
             request: {
                 type: 'GET',
-                url: "http://localhost:3000/products/" + result._id
+                url: "http://localhost:3000/user/" + result._id
             }
         }
       });
@@ -63,17 +63,18 @@ router.post("/", upload.single('userImage'), (req, res, next) => {
 
 router.get("/:contactNo", (req, res, next) => {
   const id = req.params.contactNo;
-  Product.findById(id)
+
+  User.findOne({contactNo: id})
     .select('contactNo name userImage')
     .exec()
     .then(doc => {
       console.log("From database", doc);
       if (doc) {
         res.status(200).json({
-            product: doc,
+            user: doc,
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/products'
+                url: 'http://localhost:3000/user'
             }
         });
       } else {
